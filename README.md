@@ -1,5 +1,5 @@
 # graph
-A Python tool for generating IMDb rating graphs of TV series using OMDb API, IMDb and Plotly.
+A Python tool for generating IMDb rating graphs of TV series using [OMDb API](http://www.omdbapi.com), [IMDb](http://www.imdb.com) and [Plotly](https://plot.ly).
 
 ### Usage
 ```
