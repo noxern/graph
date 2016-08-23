@@ -14,7 +14,7 @@ optional arguments:
 
 ### Example input
 ```
-$ python graph.py -title 'Breaking Bad' -username johndoe -password Tr0ub4dor&3
+$ python graph.py -title 'Breaking Bad' -username 'johndoe' -password 'Tr0ub4dor&3'
 ```
 
 ### Example output

@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import argparse
+import sys
 
 from lxml.html import parse
 import plotly.plotly as py
@@ -67,6 +68,9 @@ layout = go.Layout(
 )
 
 # sign in to plot.ly and output png
-py.sign_in(args.username, args.password)
-fig = go.Figure(data=data, layout=layout)
-py.image.save_as(fig, filename='graph.png')
+try:
+    py.sign_in(args.username, args.password)
+    fig = go.Figure(data=data, layout=layout)
+    py.image.save_as(fig, filename='graph.png')
+except Exception:
+    sys.exit('Oh no! Something has gone wrong.')
