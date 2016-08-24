@@ -3,18 +3,20 @@ A Python tool for generating IMDb rating graphs of TV series using [OMDb API](ht
 
 ### Usage
 ```
-usage: graph.py [-h] -title TITLE -username USERNAME -password PASSWORD
+usage: graph.py [-h] title username password
+
+positional arguments:
+  title       The title of the TV series
+  username    The username of your Plotly account
+  password    The password of your Plotly account
 
 optional arguments:
-  -h, --help          show this help message and exit
-  -title TITLE        The title of the TV series
-  -username USERNAME  The username of your Plotly account
-  -password PASSWORD  The password of your Plotly account
+  -h, --help  show this help message and exit
 ```
 
 ### Example input
 ```
-$ python graph.py -title 'Breaking Bad' -username 'johndoe' -password 'Tr0ub4dor&3'
+$ python graph.py 'Breaking Bad' 'johndoe' 'Tr0ub4dor&3'
 ```
 
 ### Example output

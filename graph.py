@@ -10,9 +10,9 @@ import requests
 import six
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-title', required=True, help='The title of the TV series')
-parser.add_argument('-username', required=True, help='The username of your Plotly account')
-parser.add_argument('-password', required=True, help='The password of your Plotly account')
+parser.add_argument('title', help='The title of the TV series')
+parser.add_argument('username', help='The username of your Plotly account')
+parser.add_argument('password', help='The password of your Plotly account')
 args = parser.parse_args()
 
 # use title to get IMDb id from OMDb API
