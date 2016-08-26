@@ -60,8 +60,11 @@ for season, ratings in six.iteritems(results):
 # set up layout
 layout = go.Layout(
     title='<b>IMDb ratings of %s episodes</b>' % r.json()['Title'],
-    yaxis=dict(title='Rating', range=[0, 10.1], tickmode='linear', tick0=0, dtick=2.5, tickformat='.1f'),
-    xaxis=dict(title='Episode', range=[0, episodes+1], tickmode='array', tickvals=[1, episodes], showgrid=False),
+    yaxis=dict(title='Rating', range=[0, 10.1], tickmode='linear', tick0=0,
+               dtick=2.5, tickformat='.1f', tickprefix=' ' * 10),
+    xaxis=dict(title='Episode', range=[0, episodes+1], tickmode='array',
+               tickvals=[1, episodes], showgrid=False),
+    margin=go.Margin(l=100, pad=10),
     showlegend=False,
     width=1200,
     height=400
