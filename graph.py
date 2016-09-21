@@ -52,7 +52,7 @@ episodes = 0
 for season, ratings in six.iteritems(results):
     data.append(go.Scatter(
         name='S' + str(season),
-        x=range(episodes+1, episodes+len(ratings)+1),
+        x=list(range(episodes+1, episodes+len(ratings)+1)),
         y=ratings,
         marker=dict(size=5)
     ))
