@@ -3,11 +3,10 @@
 import argparse
 import sys
 
-from lxml.html import parse
-import plotly.plotly as py
 import plotly.graph_objs as go
-import requests
+import plotly.plotly as py
 import six
+from lxml.html import parse
 
 parser = argparse.ArgumentParser()
 parser.add_argument('title', help='The title of the TV series')
@@ -15,12 +14,15 @@ parser.add_argument('username', help='The username of your Plotly account')
 parser.add_argument('password', help='The password of your Plotly account')
 args = parser.parse_args()
 
-# use title to get IMDb id from OMDb API
-r = requests.get('http://www.omdbapi.com/?t=%s&type=series' % args.title)
+# find a candidate
+search_page = parse('http://www.imdb.com/find?q=%s&s=tt&ttype=tv' % args.title)
+candidate = search_page.xpath('//*[@class="findSection"]/table/tr[1]/td[2]/a')
+if not candidate: sys.exit('Oh no! No TV series was found with the name: %s' % args.title)
 
-# get ratings from IMDb
-page = parse('http://www.imdb.com/title/%s/epdate' % r.json()['imdbID'])
-rows = page.xpath('//*[@id="tn15content"]/table//tr[descendant::td]')
+# get ratings
+ratings_page = parse('http://www.imdb.com/title/%s/epdate' % candidate[0].get('href').split('/')[2])
+rows = ratings_page.xpath('//*[@id="tn15content"]/table//tr[descendant::td]')
+if not rows: sys.exit('Oh no! No ratings were found for: %s' % candidate[0].text)
 
 # parse ratings
 results = {}
@@ -59,7 +61,7 @@ for season, ratings in six.iteritems(results):
 
 # set up layout
 layout = go.Layout(
-    title='<b>IMDb ratings of %s episodes</b>' % r.json()['Title'],
+    title='<b>IMDb ratings of %s episodes</b>' % candidate[0].text,
     yaxis=dict(title='Rating', range=[0, 10.1], tickmode='linear', tick0=0,
                dtick=2.5, tickformat='.1f', tickprefix=' ' * 10),
     xaxis=dict(title='Episode', range=[0, episodes+1], tickmode='array',
