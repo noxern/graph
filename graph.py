@@ -8,6 +8,8 @@ import plotly.plotly as py
 import six
 from lxml.html import parse
 
+IMDB_URL = 'http://www.imdb.com'
+
 parser = argparse.ArgumentParser()
 parser.add_argument('title', help='The title of the TV series')
 parser.add_argument('username', help='The username of your Plotly account')
@@ -15,12 +17,12 @@ parser.add_argument('password', help='The password of your Plotly account')
 args = parser.parse_args()
 
 # find a candidate
-search_page = parse('http://www.imdb.com/find?q=%s&s=tt&ttype=tv' % args.title)
+search_page = parse(IMDB_URL + '/find?q=%s&s=tt&ttype=tv' % args.title)
 candidate = search_page.xpath('//*[@class="findSection"]/table/tr[1]/td[2]/a')
 if not candidate: sys.exit('Oh no! No TV series was found with the name: %s' % args.title)
 
 # get ratings
-ratings_page = parse('http://www.imdb.com/title/%s/epdate' % candidate[0].get('href').split('/')[2])
+ratings_page = parse(IMDB_URL + '/title/%s/epdate' % candidate[0].get('href').split('/')[2])
 rows = ratings_page.xpath('//*[@id="tn15content"]/table//tr[descendant::td]')
 if not rows: sys.exit('Oh no! No ratings were found for: %s' % candidate[0].text)
 
@@ -29,17 +31,12 @@ results = {}
 
 for row in rows:
 
-    # episode doesn't belong in a season (eg. epilogue, special, etc.)
-    if '.' not in row[0].text:
-        continue
-
-    # episode hasn't aired yet
-    if len(row) != 5:
-        continue
+    if '.' not in row[0].text: continue  # episode doesn't belong in a season (eg. special)
+    if len(row) != 5: continue           # episode hasn't aired yet
 
     season, episode = map(int, row[0].text.split('.'))
     title = row[1][0].text
-    link = 'http://www.imdb.com' + row[1][0].get('href')
+    link = IMDB_URL + row[1][0].get('href')
     rating = float(row[2].text)
     votes = int(row[3].text.replace(',', ''))
 
