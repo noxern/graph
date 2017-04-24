@@ -1,7 +1,7 @@
 #!/usr/bin/env python3.6
-from urllib.parse import quote
 
 import os
+from urllib.parse import quote
 
 import falcon
 import hug
