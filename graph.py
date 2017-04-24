@@ -93,7 +93,8 @@ def graph(title: hug.types.text):
     return output
 
 
-@hug.get(on_invalid=lambda x: 'Have you tried turning it off and on again? :troll:', examples='text=Breaking%20Bad')
+@hug.get(output_invalid=hug.output_format.text, examples='text=Breaking%20Bad',
+         on_invalid=lambda x: 'Have you tried turning it off and on again? :troll:')
 def slack(text: hug.types.text):
     return dict(
         response_type='in_channel',
