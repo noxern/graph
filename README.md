@@ -6,7 +6,7 @@ A Python 3.6 API for generating IMDb rating graphs of TV series using [IMDb](htt
 
 Environmental variables:
 - `PLOTLY_USERNAME`
-- `PLOTLY_PASSWORD`
+- `PLOTLY_API_KEY`
 
 ### Setup
 

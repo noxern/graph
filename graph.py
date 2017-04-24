@@ -12,7 +12,7 @@ from lxml import html
 
 IMDB_URL = 'http://www.imdb.com'
 
-py.sign_in(os.environ['PLOTLY_USERNAME'], os.environ['PLOTLY_PASSWORD'])
+py.sign_in(os.environ['PLOTLY_USERNAME'], os.environ['PLOTLY_API_KEY'])
 
 api = hug.API(__name__)
 
