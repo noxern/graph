@@ -21,6 +21,17 @@ api = hug.API(__name__)
 def format_as_png_when_valid(data, request=None, response=None):
     return data
 
+@hug.get()
+def slack(text: hug.types.text):
+    return {
+        'response_type': 'in_channel',
+        'text': 'Graph for {show}'.format(show=text),
+        'attachments': [{
+          'image_url': 'https://tvgraph.herokuapp.com/graph?title={show}'.format(show=text)
+        }]
+    }
+
+
 
 @hug.get(output=format_as_png_when_valid, examples='title=Breaking%20Bad')
 def graph(title: hug.types.text):
