@@ -11,6 +11,7 @@ import requests
 from lxml import html
 
 IMDB_URL = 'http://www.imdb.com'
+GRAPH_URL = f'https://{os.environ.get("HEROKU_APP_NAME")}.herokuapp.com'
 
 py.sign_in(os.environ['PLOTLY_USERNAME'], os.environ['PLOTLY_API_KEY'])
 
@@ -20,18 +21,6 @@ api = hug.API(__name__)
 @hug.output_format.on_valid('image/png')
 def format_as_png_when_valid(data, request=None, response=None):
     return data
-
-@hug.get()
-def slack(text: hug.types.text):
-    show = text
-    return {
-        'response_type': 'in_channel',
-        'text': f'Graph for {show}',
-        'attachments': [{
-          'image_url': f'https://tvgraph.herokuapp.com/graph?title={show}'
-        }]
-    }
-
 
 
 @hug.get(output=format_as_png_when_valid, examples='title=Breaking%20Bad')
@@ -54,7 +43,7 @@ def graph(title: hug.types.text):
     if not rows: raise Exception(f'Oh no! No ratings were found for: {title}')
 
     # parse ratings
-    results = {}
+    results = dict()
 
     for row in rows:
 
@@ -100,6 +89,16 @@ def graph(title: hug.types.text):
     output = py.image.get(fig)
 
     return output
+
+
+@hug.get(examples='text=Breaking%20Bad')
+def slack(text: hug.types.text):
+    return dict(
+        response_type='in_channel',
+        attachments=[
+            dict(image_url=GRAPH_URL + f'/graph?title={text}')
+        ]
+    )
 
 
 @hug.exception(Exception)
