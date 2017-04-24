@@ -1,5 +1,6 @@
 #!/usr/bin/env python3.6
 
+import logging
 import os
 from urllib.parse import quote
 
@@ -104,4 +105,5 @@ def slack(text: hug.types.text):
 
 @hug.exception(Exception)
 def handle_exception(exception):
+    logging.exception('An exception with the following traceback occurred:')
     raise falcon.HTTPInternalServerError('error', str(exception))
