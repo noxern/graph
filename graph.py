@@ -1,6 +1,7 @@
 #!/usr/bin/env python3.6
 
 import os
+from urllib.parse import quote
 
 import falcon
 import hug
@@ -96,7 +97,7 @@ def slack(text: hug.types.text):
     return dict(
         response_type='in_channel',
         attachments=[
-            dict(image_url=GRAPH_URL + f'/graph?title={text}')
+            dict(image_url=GRAPH_URL + f'/graph?title={quote(text)}')
         ]
     )
 
