@@ -11,6 +11,7 @@ import hug.types
 import plotly.graph_objs as go
 import plotly.plotly as py
 import requests
+from cachetools import func
 from lxml import html
 
 IMDB_URL = 'http://www.imdb.com'
@@ -21,15 +22,8 @@ py.sign_in(os.environ['PLOTLY_USERNAME'], os.environ['PLOTLY_API_KEY'])
 api = hug.API(__name__)
 
 
-@hug.output_format.on_valid('image/png')
-def format_as_png_when_valid(data, request=None, response=None):
-    return data
-
-
-@hug.get(output=format_as_png_when_valid, examples='title=Breaking%20Bad')
-def graph(title: hug.types.text):
-    """Returns an IMDb ratings graph of the given TV series"""
-
+@func.ttl_cache(maxsize=32, ttl=60)
+def create_graph(title):
     # find a candidate (with English as accept language to avoid geolocalized title names)
     search_res = requests.get(IMDB_URL + f'/find?q={title}&s=tt&ttype=tv', headers={'Accept-Language': 'en'})
     search_page = html.fromstring(search_res.text)
@@ -92,6 +86,17 @@ def graph(title: hug.types.text):
     output = py.image.get(fig)
 
     return output
+
+
+@hug.output_format.on_valid('image/png')
+def format_as_png_when_valid(data, request=None, response=None):
+    return data
+
+
+@hug.get(output=format_as_png_when_valid, examples='title=Breaking%20Bad')
+def graph(title: hug.types.text):
+    """Returns an IMDb ratings graph of the given TV series"""
+    return create_graph(title)
 
 
 @hug.get(output_invalid=hug.output_format.text, examples='text=Breaking%20Bad',
