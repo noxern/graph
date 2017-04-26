@@ -1,6 +1,7 @@
 #!/usr/bin/env python3.6
 
 import logging
+import random
 import os
 from urllib.parse import quote
 
@@ -96,10 +97,19 @@ def graph(title: hug.types.text):
 @hug.get(output_invalid=hug.output_format.text, examples='text=Breaking%20Bad',
          on_invalid=lambda x: 'Have you tried turning it off and on again? :troll:')
 def slack(text: hug.types.text):
+    title = text
+
+    if text == 'top250':
+        top250_res = requests.get(IMDB_URL + '/chart/toptv', headers={'Accept-Language': 'en'})
+        top250_page = html.fromstring(top250_res.text)
+        candidates = top250_page.xpath('//*[@data-caller-name="chart-top250tv"]//tr/td[2]/a')
+
+        title = random.choice(candidates).text
+
     return dict(
         response_type='in_channel',
         attachments=[
-            dict(image_url=GRAPH_URL + f'/graph?title={quote(text)}')
+            dict(image_url=GRAPH_URL + f'/graph?title={quote(title)}')
         ]
     )
 
