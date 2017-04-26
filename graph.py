@@ -22,7 +22,7 @@ py.sign_in(os.environ['PLOTLY_USERNAME'], os.environ['PLOTLY_API_KEY'])
 api = hug.API(__name__)
 
 
-@func.ttl_cache(maxsize=32, ttl=60)
+@func.ttl_cache(maxsize=32, ttl=3600)
 def create_graph(title):
     # find a candidate (with English as accept language to avoid geolocalized title names)
     search_res = requests.get(IMDB_URL + f'/find?q={title}&s=tt&ttype=tv', headers={'Accept-Language': 'en'})
