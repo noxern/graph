@@ -3,7 +3,7 @@ A Python 3.6 API for generating IMDb rating graphs of TV series using [IMDb](htt
 
 Bonus: [Heroku integration](https://devcenter.heroku.com/articles/getting-started-with-python#introduction)
 
-Bonus: [Slack integration](https://api.slack.com/custom-integrations/outgoing-webhooks)
+Bonus: [Slack integration](https://api.slack.com/slash-commands)
 
 ### Config
 
@@ -50,6 +50,7 @@ The documentation for the API are returned as JSON on every 404 request. For exa
             },
             "/slack": {
                 "GET": {
+                   "usage": "Returns JSON containing an attachment with an image url for the Slack integration",
                     "examples": [
                         "http://localhost:8000/slack?text=Breaking%20Bad"
                     ],

@@ -3,6 +3,7 @@
 import logging
 import random
 import os
+import uuid
 from urllib.parse import quote
 
 import falcon
@@ -102,6 +103,7 @@ def graph(title: hug.types.text):
 @hug.get(output_invalid=hug.output_format.text, examples='text=Breaking%20Bad',
          on_invalid=lambda x: 'Have you tried turning it off and on again? :troll:')
 def slack(text: hug.types.text):
+    """Returns JSON containing an attachment with an image url for the Slack integration"""
     title = text
 
     if text == 'top250':
@@ -114,7 +116,7 @@ def slack(text: hug.types.text):
     return dict(
         response_type='in_channel',
         attachments=[
-            dict(image_url=GRAPH_URL + f'/graph?title={quote(title)}')
+            dict(image_url=GRAPH_URL + f'/graph?title={quote(title)}&uuid={uuid.uuid4()}')
         ]
     )
 
