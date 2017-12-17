@@ -25,6 +25,8 @@ api = hug.API(__name__)
 
 @func.ttl_cache(maxsize=32, ttl=3600)
 def create_graph(title):
+    results = dict()
+
     # find a candidate (with English as accept language to avoid geolocalized title names)
     search_res = requests.get(IMDB_URL + f'/find?q={title}&s=tt&ttype=tv', headers={'Accept-Language': 'en'})
     search_page = html.fromstring(search_res.text)
@@ -34,27 +36,34 @@ def create_graph(title):
     tt_id = candidate[0].get("href").split("/")[2]
     title = candidate[0].text
 
-    # get ratings
-    ratings_res = requests.get(IMDB_URL + f'/title/{tt_id}/epdate')
-    ratings_page = html.fromstring(ratings_res.text)
-    rows = ratings_page.xpath('//*[@id="tn15content"]/table//tr[descendant::td]')
-    if not rows: raise Exception(f'Oh no! No ratings were found for: {title}')
+    # get seasons
+    seasons_res = requests.get(IMDB_URL + f'/title/{tt_id}/episodes/_ajax')
+    seasons_page = html.fromstring(seasons_res.text)
+    seasons = seasons_page.xpath('//*[@id="bySeason"]/option/@value')
+    if not seasons: raise Exception(f'Oh no! No seasons were found for: {title}')
 
-    # parse ratings
-    results = dict()
+    for season in seasons:
 
-    for row in rows:
+        # get ratings
+        ratings_res = requests.get(IMDB_URL + f'/title/{tt_id}/episodes/_ajax?season={season}')
+        ratings_page = html.fromstring(ratings_res.text)
+        rows = ratings_page.xpath('//*[@class="info"]')
+        if not rows: raise Exception(f'Oh no! No ratings were found for: {title}')
 
-        if '.' not in row[0].text: continue  # episode doesn't belong in a season (eg. special)
-        if len(row) != 5: continue           # episode hasn't aired yet
+        # parse ratings
+        for row in rows:
 
-        season, episode = map(int, row[0].text.split('.'))
-        ep_title = row[1][0].text
-        ep_link = IMDB_URL + row[1][0].get('href')
-        ep_rating = float(row[2].text)
-        ep_votes = int(row[3].text.replace(',', ''))
+            episode = int(row.find('.//*[@itemprop="episodeNumber"]').get('content'))
+            if episode < 1: continue  # episode doesn't belong in a season (eg. special)
 
-        results.setdefault(season, []).append(ep_rating)
+            ep_title = row.find('.//*[@itemprop="name"]').get('title')
+            ep_link = IMDB_URL + row.find('.//*[@itemprop="name"]').get('href').split('?ref')[0]
+
+            if row.find('.//*[@class="ipl-rating-star--placeholder"]') is not None: continue  # episode hasn't aired yet
+            ep_rating = float(row.find('.//*[@class="ipl-rating-star__rating"]').text)
+            ep_votes = int(row.find('.//*[@class="ipl-rating-star__total-votes"]').text[1:][:-1].replace(',', ''))
+
+            results.setdefault(season, []).append(ep_rating)
 
     # create graph data
     data = []
