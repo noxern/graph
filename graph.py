@@ -74,6 +74,7 @@ def create_graph(title):
             name='S' + str(season),
             x=list(range(episodes + 1, episodes + len(ratings) + 1)),
             y=ratings,
+            mode='lines+markers',
             marker=dict(size=5)
         ))
 
