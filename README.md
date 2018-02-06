@@ -7,19 +7,17 @@ Bonus: [Slack integration](https://api.slack.com/slash-commands)
 
 ### Config
 
-Environmental variables:
+Create an `.env` file with the following variables:
 - `PLOTLY_USERNAME`
 - `PLOTLY_API_KEY`
 - (Optional) [`HEROKU_APP_NAME`](https://devcenter.heroku.com/articles/dyno-metadata#usage)
 
 ### Setup
 
-0. (Optional) Run `virtualenv -p python3.6 venv` to set up a Python 3.6 virtual environment.
-0. (Optional) Run `source venv/bin/activate` to activate it.
-0. Run `pip install -r requirements.txt` to install the dependencies.
+0. Run `pipenv install` to set up a virtual environment and install the dependencies.
 
 ### Running
-0. Run `gunicorn graph:__hug_wsgi__ --reload` to start a server in reload mode.
+0. Run `pipenv run gunicorn graph:__hug_wsgi__ --reload` to start a server in reload mode.
 0. Navigate to http://localhost:8000 to access the API.
 
 ### Endpoints
