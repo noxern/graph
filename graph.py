@@ -14,7 +14,7 @@ import plotly.plotly as py
 import requests_html
 from cachetools import func
 
-IMDB_URL = 'http://www.imdb.com'
+IMDB_URL = 'https://www.imdb.com'
 GRAPH_URL = f'https://{os.environ.get("HEROKU_APP_NAME")}.herokuapp.com'
 
 py.sign_in(os.environ['PLOTLY_USERNAME'], os.environ['PLOTLY_API_KEY'])
