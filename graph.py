@@ -11,14 +11,15 @@ import hug
 import hug.types
 import plotly.graph_objs as go
 import plotly.plotly as py
-import requests
+import requests_html
 from cachetools import func
-from lxml import html
 
 IMDB_URL = 'http://www.imdb.com'
 GRAPH_URL = f'https://{os.environ.get("HEROKU_APP_NAME")}.herokuapp.com'
 
 py.sign_in(os.environ['PLOTLY_USERNAME'], os.environ['PLOTLY_API_KEY'])
+
+session = requests_html.Session()
 
 api = hug.API(__name__)
 
@@ -28,40 +29,37 @@ def create_graph(title):
     results = dict()
 
     # find a candidate (with English as accept language to avoid geolocalized title names)
-    search_res = requests.get(IMDB_URL + f'/find?q={title}&s=tt&ttype=tv', headers={'Accept-Language': 'en'})
-    search_page = html.fromstring(search_res.text)
-    candidate = search_page.xpath('//*[@class="findSection"]/table/tr[1]/td[2]/a')
+    search_res = session.get(IMDB_URL + f'/find?q={title}&s=tt&ttype=tv', headers={'Accept-Language': 'en'})
+    candidate = search_res.html.find('.findResult .result_text a', first=True)
     if not candidate: raise Exception(f'Oh no! No TV series was found with the name: {title}')
 
-    tt_id = candidate[0].get("href").split("/")[2]
-    title = candidate[0].text
+    tt_id = candidate.search('/title/{}/')[0]
+    title = candidate.text
 
     # get seasons
-    seasons_res = requests.get(IMDB_URL + f'/title/{tt_id}/episodes/_ajax')
-    seasons_page = html.fromstring(seasons_res.text)
-    seasons = seasons_page.xpath('//*[@id="bySeason"]/option/@value')
+    seasons_res = session.get(IMDB_URL + f'/title/{tt_id}/episodes/_ajax')
+    seasons = seasons_res.html.find('#bySeason option')
     if not seasons: raise Exception(f'Oh no! No seasons were found for: {title}')
 
     for season in seasons:
 
         # get ratings
-        ratings_res = requests.get(IMDB_URL + f'/title/{tt_id}/episodes/_ajax?season={season}')
-        ratings_page = html.fromstring(ratings_res.text)
-        rows = ratings_page.xpath('//*[@class="info"]')
+        ratings_res = session.get(IMDB_URL + f'/title/{tt_id}/episodes/_ajax?season={season.text}')
+        rows = ratings_res.html.find('.info')
         if not rows: raise Exception(f'Oh no! No ratings were found for: {title}')
 
         # parse ratings
         for row in rows:
 
-            episode = int(row.find('.//*[@itemprop="episodeNumber"]').get('content'))
+            episode = int(row.find('[itemprop="episodeNumber"]', first=True).attrs.get('content'))
             if episode < 1: continue  # episode doesn't belong in a season (eg. special)
 
-            ep_title = row.find('.//*[@itemprop="name"]').get('title')
-            ep_link = IMDB_URL + row.find('.//*[@itemprop="name"]').get('href').split('?ref')[0]
+            ep_title = row.find('[itemprop="name"]', first=True).text
+            ep_link = IMDB_URL + '/' + row.find('[itemprop="name"]', first=True).search('/{}/?')[0]
 
-            if row.find('.//*[@class="ipl-rating-star--placeholder"]') is not None: continue  # episode hasn't aired yet
-            ep_rating = float(row.find('.//*[@class="ipl-rating-star__rating"]').text)
-            ep_votes = int(row.find('.//*[@class="ipl-rating-star__total-votes"]').text[1:][:-1].replace(',', ''))
+            if row.find('.ipl-rating-star--placeholder'): continue  # episode hasn't aired yet
+            ep_rating = float(row.find('.ipl-rating-star__rating', first=True).text)
+            ep_votes = int(row.find('.ipl-rating-star__total-votes', first=True).search('({})')[0].replace(',', ''))
 
             results.setdefault(season, []).append(ep_rating)
 
@@ -117,9 +115,8 @@ def slack(text: hug.types.text):
     title = text
 
     if text == 'top250':
-        top250_res = requests.get(IMDB_URL + '/chart/toptv', headers={'Accept-Language': 'en'})
-        top250_page = html.fromstring(top250_res.text)
-        candidates = top250_page.xpath('//*[@data-caller-name="chart-top250tv"]//tr/td[2]/a')
+        top250_res = session.get(IMDB_URL + '/chart/toptv', headers={'Accept-Language': 'en'})
+        candidates = top250_res.html.find('.chart .titleColumn a')
 
         title = random.choice(candidates).text
 
