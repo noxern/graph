@@ -1,9 +1,7 @@
 # graph
-A Python 3.6 API for generating IMDb rating graphs of TV series using [IMDb](http://www.imdb.com) and [Plotly](https://plot.ly).
+A Python 3.6 API for generating rating graphs of TV series using [IMDb](https://www.imdb.com) and [Plotly](https://plot.ly).
 
-Bonus: [Heroku integration](https://devcenter.heroku.com/articles/getting-started-with-python#introduction)
-
-Bonus: [Slack integration](https://api.slack.com/slash-commands)
+With bonus integrations for [Heroku](https://devcenter.heroku.com/articles/getting-started-with-python#introduction), [New Relic](https://devcenter.heroku.com/articles/newrelic) and [Slack](https://api.slack.com/slash-commands).
 
 ### Config
 
