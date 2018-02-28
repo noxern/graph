@@ -19,7 +19,7 @@ GRAPH_URL = f'https://{os.environ.get("HEROKU_APP_NAME")}.herokuapp.com'
 
 py.sign_in(os.environ['PLOTLY_USERNAME'], os.environ['PLOTLY_API_KEY'])
 
-session = requests_html.Session()
+session = requests_html.HTMLSession()
 
 api = hug.API(__name__)
 
@@ -38,21 +38,21 @@ def create_graph(title):
 
     # get seasons
     seasons_res = session.get(IMDB_URL + f'/title/{tt_id}/episodes/_ajax')
-    seasons = seasons_res.html.find('#bySeason option')
+    seasons = [s.attrs['value'] for s in seasons_res.html.find('#bySeason option')]
     if not seasons: raise Exception(f'Oh no! No seasons were found for: {title}')
 
     for season in seasons:
 
         # get ratings
-        ratings_res = session.get(IMDB_URL + f'/title/{tt_id}/episodes/_ajax?season={season.text}')
+        ratings_res = session.get(IMDB_URL + f'/title/{tt_id}/episodes/_ajax?season={season}')
         rows = ratings_res.html.find('.info')
         if not rows: raise Exception(f'Oh no! No ratings were found for: {title}')
 
         # parse ratings
         for row in rows:
 
-            episode = int(row.find('[itemprop="episodeNumber"]', first=True).attrs.get('content'))
-            if episode < 1: continue  # episode doesn't belong in a season (eg. special)
+            ep_number = int(row.find('[itemprop="episodeNumber"]', first=True).attrs['content'])
+            if ep_number < 1: continue  # episode doesn't belong in a season (eg. special)
 
             ep_title = row.find('[itemprop="name"]', first=True).text
             ep_link = IMDB_URL + '/' + row.find('[itemprop="name"]', first=True).search('/{}/?')[0]
