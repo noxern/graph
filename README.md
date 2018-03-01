@@ -15,53 +15,51 @@ Create an `.env` file with the following variables:
 
 ### Running
 0. Run `pipenv run gunicorn graph:__hug_wsgi__ --reload` to start a server in reload mode.
-0. Navigate to http://localhost:8000 to access the API.
 
 ### Endpoints
 
-The documentation for the API are returned as JSON on every 404 request. For example on localhost:
+The documentation for the API is returned as JSON on every 404 request:
+ 
+`$ curl http://localhost:8000 | jq`
 
 ```json
 {
-    "404": "The API call you tried to make was not defined. Here's a definition of the API to help you get going :)",
-    "documentation": {
-        "handlers": {
-            "/graph": {
-                "GET": {
-                    "usage": "Returns an IMDb ratings graph of the given TV series",
-                    "examples": [
-                        "http://localhost:8000/graph?title=Breaking%20Bad"
-                    ],
-                    "outputs": {
-                        "format": null,
-                        "content_type": "image/png"
-                    },
-                    "inputs": {
-                        "title": {
-                            "type": "Basic text / string value"
-                        }
-                    }
-                }
-            },
-            "/slack": {
-                "GET": {
-                   "usage": "Returns JSON containing an attachment with an image url for the Slack integration",
-                    "examples": [
-                        "http://localhost:8000/slack?text=Breaking%20Bad"
-                    ],
-                    "outputs": {
-                        "format": "JSON (Javascript Serialized Object Notation)",
-                        "content_type": "application/json"
-                    },
-                    "inputs": {
-                        "text": {
-                            "type": "Basic text / string value"
-                        }
-                    }
-                }
-            }
+  "handlers": {
+    "/graph": {
+      "GET": {
+        "usage": "Returns an IMDb ratings graph of the given TV series",
+        "examples": [
+          "/graph?title=Breaking%20Bad"
+        ],
+        "outputs": {
+          "format": null,
+          "content_type": "image/png"
+        },
+        "inputs": {
+          "title": {
+            "type": "Basic text / string value"
+          }
         }
+      }
+    },
+    "/slack": {
+      "GET": {
+        "usage": "Returns JSON containing an attachment with an image url for the Slack integration",
+        "examples": [
+          "/slack?text=Breaking%20Bad"
+        ],
+        "outputs": {
+          "format": "JSON (Javascript Serialized Object Notation)",
+          "content_type": "application/json; charset=utf-8"
+        },
+        "inputs": {
+          "text": {
+            "type": "Basic text / string value"
+          }
+        }
+      }
     }
+  }
 }
 ```
 

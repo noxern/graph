@@ -97,7 +97,7 @@ def create_graph(title):
 
 
 @hug.output_format.on_valid('image/png')
-def format_as_png_when_valid(data, request=None, response=None):
+def format_as_png_when_valid(data):
     return data
 
 
@@ -125,6 +125,11 @@ def slack(text: hug.types.text, request=None):
             dict(image_url=request.prefix + f'/graph?title={quote(title)}&uuid={uuid.uuid4()}')
         ]
     )
+
+
+@hug.not_found(output=hug.output_format.json)
+def not_found(documentation: hug.directives.documentation):
+    return documentation
 
 
 @hug.exception(Exception)
