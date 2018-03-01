@@ -161,9 +161,9 @@
         },
         "newrelic": {
             "hashes": [
-                "sha256:a9969fa9706bbed6cace6c0c8bd08fd45cd6ecfa84c5d9d5b13f4eaf765e5b81"
+                "sha256:8f66edadcf8db74836fa804fcdd19d3fcfe9e080a8db411af34f2a9148e29eac"
             ],
-            "version": "==2.104.0.86"
+            "version": "==2.106.0.87"
         },
         "parse": {
             "hashes": [
@@ -186,9 +186,9 @@
         },
         "pyppeteer": {
             "hashes": [
-                "sha256:596929fb7d052048679081d3dc2a998cf065e936a752c7ba2392445d6e0e9706"
+                "sha256:e56641af8fde734cd97a1a2df9701a560bb9421f03b5df190765a646114d9598"
             ],
-            "version": "==0.0.10"
+            "version": "==0.0.12"
         },
         "pyquery": {
             "hashes": [
@@ -227,10 +227,10 @@
         },
         "requests-html": {
             "hashes": [
-                "sha256:de4b17433a2e042f05059ae32b6cda6dd96dce2cb2932065ce2313d22b8a7aee",
-                "sha256:86ca59a7ebb79f443d9e47db3201878bc80ba27002c07737a92523f8d2654f9b"
+                "sha256:5419b6126b99fed8e764024fb3b40ef7e784d649a8260e07a31fe1ebabc81790",
+                "sha256:3209dcbf4b64907b0fbc7c5e797a883a908054c617832e2a06e55668ffa426d5"
             ],
-            "version": "==0.6.9"
+            "version": "==0.7.2"
         },
         "six": {
             "hashes": [
