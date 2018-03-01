@@ -8,7 +8,6 @@ With bonus integrations for [Heroku](https://devcenter.heroku.com/articles/getti
 Create an `.env` file with the following variables:
 - `PLOTLY_USERNAME`
 - `PLOTLY_API_KEY`
-- (Optional) [`HEROKU_APP_NAME`](https://devcenter.heroku.com/articles/dyno-metadata#usage)
 
 ### Setup
 

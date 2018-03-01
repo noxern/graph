@@ -15,7 +15,6 @@ import requests_html
 from cachetools import func
 
 IMDB_URL = 'https://www.imdb.com'
-GRAPH_URL = f'https://{os.environ.get("HEROKU_APP_NAME")}.herokuapp.com'
 
 py.sign_in(os.environ['PLOTLY_USERNAME'], os.environ['PLOTLY_API_KEY'])
 
@@ -110,7 +109,7 @@ def graph(title: hug.types.text):
 
 @hug.get(output_invalid=hug.output_format.text, examples='text=Breaking%20Bad',
          on_invalid=lambda x: 'Have you tried turning it off and on again? :troll:')
-def slack(text: hug.types.text):
+def slack(text: hug.types.text, request=None):
     """Returns JSON containing an attachment with an image url for the Slack integration"""
     title = text
 
@@ -123,7 +122,7 @@ def slack(text: hug.types.text):
     return dict(
         response_type='in_channel',
         attachments=[
-            dict(image_url=GRAPH_URL + f'/graph?title={quote(title)}&uuid={uuid.uuid4()}')
+            dict(image_url=request.prefix + f'/graph?title={quote(title)}&uuid={uuid.uuid4()}')
         ]
     )
 
