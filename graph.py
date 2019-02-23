@@ -3,6 +3,7 @@
 import logging
 import random
 import os
+import threading
 import uuid
 from urllib.parse import quote
 
@@ -11,6 +12,7 @@ import hug
 import hug.types
 import plotly.graph_objs as go
 import plotly.plotly as py
+import requests
 import requests_html
 from cachetools import func
 
@@ -109,7 +111,7 @@ def graph(title: hug.types.text):
 
 @hug.get(output_invalid=hug.output_format.text, examples='text=Breaking%20Bad',
          on_invalid=lambda x: 'Have you tried turning it off and on again? :troll:')
-def slack(text: hug.types.text, request=None):
+def slack(text: hug.types.text, response_url: hug.types.text, request=None):
     """Returns JSON containing an attachment with an image url for the Slack integration"""
     title = text
 
@@ -119,12 +121,10 @@ def slack(text: hug.types.text, request=None):
 
         title = random.choice(candidates).text
 
-    return dict(
-        response_type='in_channel',
-        attachments=[
-            dict(image_url=request.prefix + f'/graph?title={quote(title)}&uuid={uuid.uuid4()}')
-        ]
-    )
+    t = threading.Thread(target=slack_post, args=(response_url, request.prefix, title))
+    t.start()
+
+    return dict(response_type='in_channel')
 
 
 @hug.not_found(output=hug.output_format.json)
@@ -136,3 +136,14 @@ def not_found(documentation: hug.directives.documentation):
 def handle_exception(exception):
     logging.exception('An exception with the following traceback occurred:')
     raise falcon.HTTPInternalServerError('error', str(exception))
+
+
+def slack_post(response_url, prefix, title):
+    create_graph(title)
+
+    requests.post(response_url, json=dict(
+        response_type='in_channel',
+        attachments=[
+            dict(image_url=prefix + f'/graph?title={quote(title)}&uuid={uuid.uuid4()}')
+        ]
+    ))

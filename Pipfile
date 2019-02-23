@@ -12,6 +12,7 @@ gunicorn = "*"
 hug = "*"
 newrelic = "*"
 plotly = "*"
+requests = "*"
 requests-html = "*"
 
 
