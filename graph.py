@@ -84,7 +84,7 @@ def create_graph(title):
                    dtick=2.5, tickformat='.1f', tickprefix=' ' * 10),
         xaxis=dict(title='Episode', range=[0, episodes + 1], tickmode='array',
                    tickvals=[1, episodes], showgrid=False),
-        margin=go.Margin(l=100, pad=10),
+        margin=go.layout.Margin(l=100, pad=10),
         showlegend=False,
         width=1200,
         height=400
