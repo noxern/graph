@@ -44,9 +44,9 @@ The documentation for the API is returned as JSON on every 404 request:
     },
     "/slack": {
       "GET": {
-        "usage": "Returns JSON containing an attachment with an image url for the Slack integration",
+        "usage": "Sends a delayed response to callback url for Slack integration",
         "examples": [
-          "/slack?text=Breaking%20Bad"
+          "/slack?text=Breaking%20Bad&response_url=callback"
         ],
         "outputs": {
           "format": "JSON (Javascript Serialized Object Notation)",

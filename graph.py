@@ -109,10 +109,10 @@ def graph(title: hug.types.text):
     return create_graph(title)
 
 
-@hug.get(output_invalid=hug.output_format.text, examples='text=Breaking%20Bad',
+@hug.get(output_invalid=hug.output_format.text, examples='text=Breaking%20Bad&response_url=callback',
          on_invalid=lambda x: 'Have you tried turning it off and on again? :troll:')
 def slack(text: hug.types.text, response_url: hug.types.text, request=None):
-    """Returns JSON containing an attachment with an image url for the Slack integration"""
+    """Sends a delayed response to callback url for Slack integration"""
     title = text
 
     if text == 'top250':
