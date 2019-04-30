@@ -59,6 +59,7 @@ def create_graph(title):
             ep_link = IMDB_URL + '/' + row.find('[itemprop="name"]', first=True).search('/{}/?')[0]
 
             if not row.find('.ipl-rating-widget'): continue  # episode hasn't aired yet
+            if row.find('.ipl-rating-star--placeholder'): continue  # episode hasn't been rated yet
             ep_rating = float(row.find('.ipl-rating-star__rating', first=True).text)
             ep_votes = int(row.find('.ipl-rating-star__total-votes', first=True).search('({})')[0].replace(',', ''))
 
