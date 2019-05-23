@@ -125,7 +125,10 @@ def slack(text: hug.types.text, response_url: hug.types.text, request=None):
     t = threading.Thread(target=slack_post, args=(response_url, request.prefix, title))
     t.start()
 
-    return dict(response_type='in_channel')
+    return dict(
+        response_type='in_channel',
+        text='I will get right on that! :construction_worker:'
+    )
 
 
 @hug.not_found(output=hug.output_format.json)
