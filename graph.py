@@ -143,6 +143,7 @@ def slack_post(response_url, prefix, title):
 
     requests.post(response_url, json=dict(
         response_type='in_channel',
+        replace_original=True,
         attachments=[
             dict(image_url=prefix + f'/graph?title={quote(title)}&uuid={uuid.uuid4()}')
         ]
