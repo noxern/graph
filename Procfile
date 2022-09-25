@@ -1,1 +1,1 @@
-web: newrelic-admin run-program gunicorn graph_newrelic:app -w 1 --log-file -
+web: gunicorn graph:__hug_wsgi__

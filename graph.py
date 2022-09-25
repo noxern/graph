@@ -1,8 +1,5 @@
-#!/usr/bin/env python3.7
-
 import logging
 import random
-import os
 import threading
 import uuid
 from urllib.parse import quote
@@ -10,15 +7,12 @@ from urllib.parse import quote
 import falcon
 import hug
 import hug.types
-import plotly.graph_objs as go
-import plotly.plotly as py
+import plotly.graph_objects as go
 import requests
 import requests_html
 from cachetools import func
 
 IMDB_URL = 'https://www.imdb.com'
-
-py.sign_in(os.environ['PLOTLY_USERNAME'], os.environ['PLOTLY_API_KEY'])
 
 session = requests_html.HTMLSession()
 
@@ -79,18 +73,21 @@ def create_graph(title):
     # set up layout
     layout = go.Layout(
         title=f'<b>IMDb ratings of {title} episodes</b>',
+        title_x=0.5,
         yaxis=dict(title='Rating', range=[0, 10.1], tickmode='linear', tick0=0,
-                   dtick=2.5, tickformat='.1f', tickprefix=' ' * 10),
+                   dtick=2.5, tickformat='.1f', ticksuffix='   ', ticks='',
+                   showgrid=True),
         xaxis=dict(title='Episode', range=[0, episodes + 1], tickmode='array',
-                   tickvals=[1, episodes], showgrid=False),
-        margin=go.layout.Margin(l=100, pad=10),
+                   tickvals=[1, episodes], tickcolor='white', showgrid=False),
+        template='simple_white',
+        margin=go.layout.Margin(l=100),
         showlegend=False,
         width=1200,
         height=400
     )
 
     fig = go.Figure(data=data, layout=layout)
-    output = py.image.get(fig)
+    output = fig.to_image(format='png')
 
     return output
 

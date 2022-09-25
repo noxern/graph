@@ -1,20 +1,14 @@
 # graph
-A Python 3.7 API for generating rating graphs of TV series using [IMDb](https://www.imdb.com) and [Plotly](https://plot.ly).
+A Python 3 API for generating rating graphs of TV series using [IMDb](https://www.imdb.com) and [Plotly](https://plotly.com/python/).
 
-With bonus integrations for [Heroku](https://devcenter.heroku.com/articles/getting-started-with-python#introduction), [New Relic](https://devcenter.heroku.com/articles/newrelic) and [Slack](https://api.slack.com/slash-commands).
-
-### Config
-
-Create an `.env` file with the following variables:
-- `PLOTLY_USERNAME`
-- `PLOTLY_API_KEY`
+With bonus integrations for [Fly.io](https://fly.io/docs/languages-and-frameworks/python/) and [Slack](https://api.slack.com/interactivity/slash-commands).
 
 ### Setup
 
-0. Run `pipenv install` to set up a virtual environment and install the dependencies.
+0. Run `poetry install` to set up a virtual environment and install the dependencies.
 
 ### Running
-0. Run `pipenv run gunicorn graph:__hug_wsgi__ --reload` to start a server in reload mode.
+0. Run `poetry run gunicorn graph:__hug_wsgi__ --reload` to start a server in reload mode.
 
 ### Endpoints
 
