@@ -3,6 +3,12 @@ A Python 3 API for generating rating graphs of TV series using [IMDb](https://ww
 
 With bonus integrations for [Fly.io](https://fly.io/docs/languages-and-frameworks/python/) and [Slack](https://api.slack.com/interactivity/slash-commands).
 
+### Config
+
+Set the following environment variables:
+- `PLOTLY_USERNAME`
+- `PLOTLY_API_KEY`
+
 ### Setup
 
 0. Run `poetry install` to set up a virtual environment and install the dependencies.

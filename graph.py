@@ -1,5 +1,6 @@
 import logging
 import random
+import os
 import threading
 import uuid
 from urllib.parse import quote
@@ -8,11 +9,14 @@ import falcon
 import hug
 import hug.types
 import plotly.graph_objects as go
+import chart_studio.plotly as py
 import requests
 import requests_html
 from cachetools import func
 
 IMDB_URL = 'https://www.imdb.com'
+
+py.sign_in(os.environ['PLOTLY_USERNAME'], os.environ['PLOTLY_API_KEY'])
 
 session = requests_html.HTMLSession()
 
@@ -87,7 +91,7 @@ def create_graph(title):
     )
 
     fig = go.Figure(data=data, layout=layout)
-    output = fig.to_image(format='png')
+    output = py.image.get(fig)
 
     return output
 
