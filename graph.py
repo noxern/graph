@@ -29,7 +29,7 @@ def create_graph(title):
 
     # find a candidate (with English as accept language to avoid geolocalized title names)
     search_res = session.get(IMDB_URL + f'/find?q={title}&s=tt&ttype=tv', headers={'Accept-Language': 'en'})
-    candidate = search_res.html.find('.findResult .result_text a', first=True)
+    candidate = search_res.html.find('.find-title-result a', first=True)
     if not candidate: raise Exception(f'Oh no! No TV series was found with the name: {title}')
 
     tt_id = candidate.search('/title/{}/')[0]
