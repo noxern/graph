@@ -1,0 +1,9 @@
+version: '3'
+services:
+  graph:
+    image: ghcr.io/noxern/graph:master
+    ports:
+    - "8000:8000"
+    environment:
+    - PLOTLY_USERNAME=<username>
+    - PLOTLY_API_KEY=<api_token>
