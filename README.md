@@ -16,6 +16,12 @@ Set the following environment variables:
 ### Running
 0. Run `poetry run gunicorn graph:__hug_wsgi__ --reload` to start a server in reload mode.
 
+### Docker
+
+See [docker-compose.yml](docker-compose.yml)
+
+Edit the environment variables and run with `docker-compose up -d`
+
 ### Endpoints
 
 The documentation for the API is returned as JSON on every 404 request:
