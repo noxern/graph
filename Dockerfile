@@ -20,4 +20,4 @@ COPY poetry.lock pyproject.toml /code/
 RUN poetry config virtualenvs.create false \
     && poetry install --no-dev --no-interaction --no-ansi
 COPY . /code
-CMD poetry run gunicorn --bind :8000 graph:__hug_wsgi__
+CMD poetry run gunicorn --bind :8000 -t 0 graph:__hug_wsgi__
